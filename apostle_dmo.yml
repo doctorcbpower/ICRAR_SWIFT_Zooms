@@ -1,0 +1,75 @@
+# Define some meta-data about the simulation
+MetaData:
+  run_name:   APOSTLE MedRed V2 - DMO
+
+# Define the system of units to use internally. 
+InternalUnitSystem:
+  UnitMass_in_cgs:     1.98841e43    # 10^10 Msun 
+  UnitLength_in_cgs:   3.08567758e24 # 1 Mpc 
+  UnitVelocity_in_cgs: 1e5           # 1 km/s 
+  UnitCurrent_in_cgs:  1             # Amperes
+  UnitTemp_in_cgs:     1             # Kelvin
+
+# Cosmological parameters
+Cosmology:
+  h:              0.704       
+  a_begin:        0.0078125          # z_ini = 127
+  a_end:          1.0                # z_end = 0
+  Omega_cdm:      0.272        
+  Omega_lambda:   0.728        
+  Omega_b:        0.0    
+  
+# Parameters governing the time integration
+TimeIntegration:
+  dt_max:     0.01
+  dt_min:     1e-10
+
+Scheduler:
+  max_top_level_cells: 16
+  cell_split_size:     100
+
+# Parameters governing the snapshots
+Snapshots:
+  basename:            apostle
+  scale_factor_first:  0.05
+  delta_time:          1.02
+
+# Parameters governing the conserved quantities statistics
+Statistics:
+  delta_time:           1.02
+  scale_factor_first:   0.05
+
+# Parameters for the self-gravity scheme
+Gravity:
+  eta:                      0.025
+  MAC:                      adaptive
+  theta_cr:                 0.7
+  epsilon_fmm:              0.001
+  use_tree_below_softening: 1
+  comoving_DM_softening:         0.01    # 10 kpc = 1/25 mean inter-particle separation
+  max_physical_DM_softening:     0.00263 # 10 ckpc = 2.63 pkpc at z=2.8 (EAGLE-like evolution of softening).
+  comoving_baryon_softening:     0.01    # 10 kpc = 1/25 mean inter-particle separation
+  max_physical_baryon_softening: 0.00263 # 10 ckpc = 2.63 pkpc at z=2.8 (EAGLE-like evolution of softening).
+  softening_ratio_background:    10
+  mesh_side_length:       256
+
+ZoomRegion:
+  enable: 1
+  zoom_cells_natural_cell: 16
+
+# Parameters of the hydro scheme
+SPH:
+  resolution_eta:      1.2348   # "48 Ngb" with the cubic spline kernel
+  h_min_ratio:         0.1
+  CFL_condition:       0.1
+  initial_temperature: 1200.    # (1 + z_ini)^2 * 2.72K
+  minimal_temperature: 100.
+
+# Parameters related to the initial conditions
+InitialConditions:
+  file_name:  ./snap_v2_000.hdf5
+  periodic:   1
+  cleanup_h_factors: 1              # ICs were generated for Gadget, we need to get rid of h-factors
+  cleanup_velocity_factors: 1       # ICs were generated for Gadget, we need to get rid of sqrt(a) factors in the velocity
+  generate_gas_in_ics: 0            # Generate gas particles from the DM-only ICs
+  cleanup_smoothing_lengths: 0      # Since we generate gas, make use of the (expensive) cleaning-up procedure.
